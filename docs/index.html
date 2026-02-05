@@ -23,27 +23,38 @@
                 </a>.
                 Wanna see how looks ? <a href="basic_viewer/index.html">There</a> you go.
             </li>
-            <li> A viewer customized by
-                <a
-                    href="query_param/index.html?page=361&manifest=https://content.staatsbibliothek-berlin.de/dc/869036874/manifest"
-                >
-                    query params
+            <li>
+                Mirador viewers can be configured easily with a wide range of
+                options ( see the
+                <a target="_blank" href="https://github.com/ProjectMirador/mirador/wiki/Configuration-Recipes">
+                    Config Recipes
                 </a>
-                . E.g.:
-                        <ul>
-                            <li> manifest - the manfifest url</li>
-                            <li> page - the page you want opened at the beginning</li>
-                            <li> view - one of the following:  single, gallery, book </li>
-                            <li> language - de ...</li>
-                            <li> showZoomControls - true </li>
-                            <li> showWorkspaceControl - true</li>
-                        </ul>
-            </li>
-            <li>
-                <a href="minimal_viewer/index.html">A minimal viewer</a> that can be used in situations where users shouldn't switch to many things.
-            </li>
-            <li>
-                <a href="showcase_viewer/index.html">A quite minimal viewer</a> that doesn't leave to much room for users but let's them use the table of contents.
+                )
+                <br>
+                I found it especially useful to set things up via <strong>query
+                params</strong>. This way one viewer can serve many use cases
+                with just some query params set differently.
+
+                <ul>
+                    <li>
+                        Like a <strong>minimal viewer</strong> for situations
+                        like an exhibition showing a work on a tablet device
+                        where the user should stick to a manifest and only
+                        leaf some pages and zoom in on.
+                        <br>
+                        In this case we only need to add to query params like
+                        that:
+                        <br>
+                        <code>
+                            ?page=5&manifest=https://example.com/your-desired-manifest.json
+                        </code>
+                        <br>
+                        <a target="_blank" href="query_param/index.html?page=5&manifest=https://iiif.bodleian.ox.ac.uk/iiif/manifest/e32a277e-91e2-4a6d-8ba6-cc4bad230410.json">
+                            This
+                        </a>
+                        is how it turns out.
+                    </li>
+                </ul>
             </li>
             <li>
                 <a href="basic_pipeline/index.html">A gh actions built viewer</a> with some plugins (text overlay, image tools, downloads).
