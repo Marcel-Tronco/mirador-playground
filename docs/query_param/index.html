@@ -1,31 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Mirador Viewer - Staatsbibliothek zu Berlin</title>
+<head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src=" https://cdn.jsdelivr.net/npm/mirador@3.4.3/dist/mirador.min.js "></script>
-  </head>
-  <body>
-    <div id="viewer"></div>
+    <title>Mirador Settings via Query Params</title>
+</head>
+<style>
+    /* Style Overrides */
+    /* when showing no other buttons in the top bar, we should center the title */
+    .mirador-window-top-bar h2 { margin-inline: auto; flex-grow: unset;}
+    @media (any-pointer: coarse ) {
+        #viewer .MuiDrawer-paper {
+            width: fit-content;
+        }
+        #viewer .MuiDrawer-paper .MuiButtonBase-root .MuiTab-wrapper {
+            width: fit-content;
+            height: fit-content;
+        }
+        #viewer .MuiButtonBase-root .MuiSvgIcon-root  {
+            width: max(1.2em, min(1.9em, calc(11vw)));
+            height: max(1.2em, min(1.9em, calc(11vw)));
+        }
+        /* This targets the MiradorMenuButton Element */
+        #viewer .mirador54 {
+            width: fit-content;
+            height: fit-content;
+        }
+        #viewer .MuiTypography-caption {
+            font-size: 1.1rem;
+            line-height: 1.3rem;
+            letter-spacing: 0.05em;
+        }
+
+        #viewer .MuiTypography-h2 {
+            font-size: 1.2rem;
+            line-height: 1.4rem;
+            letter-spacing: 0.05em;
+        }
+        #viewer .MuiToolbar-dense {
+            min-height: 48px;
+        }
+    }
+
+</style>
+<body>
+    <div id="viewer"/> 
     <script type="text/javascript">
         const params = Object.fromEntries( (new URL(document.location.href)).searchParams.entries())
-        const { manifest, page=1, view='single', language="de", sideBarPanel="info", sideBarOpen=false, showZoomControls=true, showWorkspaceControl=true } = params
+        const showWorkspaceControl = false
+        const { 
+            allowFullscreen=false,
+            allowTopMenuButton=false,
+            language="en",
+            manifest,
+            page=1,
+            sideBarPanel=null,
+            sideBarOpen=false,
+            showPageInfo=true,
+            showPagination=true,
+            showZoomControls=true,
+            // showWorkspaceControl=true, // We disable Workspace viewer here
+            view='single',
+        } = params
+
+
+        /*
+         *  This parses pagination and pageinfo settings:
+         */
+        if ( [showPageInfo, showPagination].some((v) => v === 'false') ) {
+            classesToChange = []
+            if ( showPageInfo === 'false' ) classesToChange.push('.mirador-osd-info')
+            if ( showPagination === 'false' ) classesToChange.push('.mirador-osd-navigation')
+            // Currently this is the class for the divider: .mirador73
+            // It will need to be updated when we update mirador
+            if ( [showPageInfo, showPagination].every((v) => v === 'false' )) classesToChange.push('.mirador73')
+            classesToChange = classesToChange.join(', ')
+            const paginationStyle = document.createElement('style', )
+            paginationStyle.innerHTML = `${classesToChange} { display: none !important; }`
+            document.head.appendChild(paginationStyle)
+        }
+
         const config = {
             "id": "viewer",
             "window": {
-                allowFullscreen: true,
+                defaultView: view, // apparently we need the line beneath or if not book will be the default view allways
                 views: [ { key: 'single' }, { key: 'gallery' }, { key: 'book'}],
-                defaultView: view,
-                sideBarOpen: sideBarOpen === "true",
-                sideBarPanel,
-                
+                allowFullscreen: allowFullscreen === 'true',
+                allowClose: false,
+                allowMaximize: false,
+                sideBarPanel: sideBarPanel || 'info',
+                allowWindowSideBar: [ 'info', 'attribution', 'canvas', 'annotations', 'search'].includes(sideBarPanel),
+                sideBarOpen: sideBarOpen === 'true',
+                allowTopMenuButton: allowTopMenuButton === 'true'
             },
             workspace: {
-                showZoomControls: showZoomControls !== "false"
+                showZoomControls: showZoomControls !== "false",
+                draggingEnabled: true
             },
-            workspaceControlPanel: {
-                enabled: showWorkspaceControl !== "false"
+            osdConfig: {
+                constrainDuringPan: true,
+                visibilityRatio: 0.8
             },
             language
         }
@@ -37,7 +112,8 @@
                 maximized: true,
             }]
         }
+
         var mirador = Mirador.viewer(config)
     </script>
-  </body>
+</body>
 </html>
