@@ -10,72 +10,110 @@
     /* Style Overrides */
     /* when showing no other buttons in the top bar, we should center the title */
     .mirador-window-top-bar h2 { margin-inline: auto; flex-grow: unset;}
-
-    @media (resolution > 180dpi ) {
-        #my-mirador .MuiDrawer-paper {
+    @media (any-pointer: coarse ) {
+        #viewer .MuiDrawer-paper {
             width: fit-content;
         }
-        #my-mirador .MuiDrawer-paper .MuiButtonBase-root .MuiTab-wrapper {
+        #viewer .MuiDrawer-paper .MuiButtonBase-root .MuiTab-wrapper {
             width: fit-content;
             height: fit-content;
         }
-        #my-mirador .MuiButtonBase-root .MuiSvgIcon-root  {
-            width: min(1.6em, calc(20vw - 28px));
-            height: min(1.6em, calc(20vw - 28px));
+        #viewer .MuiButtonBase-root .MuiSvgIcon-root  {
+            width: max(1.2em, min(1.9em, calc(11vw)));
+            height: max(1.2em, min(1.9em, calc(11vw)));
         }
         /* This targets the MiradorMenuButton Element */
-        #my-mirador .mirador54 {
+        #viewer .mirador54 {
             width: fit-content;
             height: fit-content;
         }
-        #my-mirador .MuiTypography-caption {
+        #viewer .MuiTypography-caption {
             font-size: 1.1rem;
             line-height: 1.3rem;
             letter-spacing: 0.05em;
         }
-        #my-mirador .MuiTypography-h2 {
+
+        #viewer .MuiTypography-h2 {
             font-size: 1.2rem;
             line-height: 1.4rem;
             letter-spacing: 0.05em;
         }
-        #my-mirador .MuiToolbar-dense {
+        #viewer .MuiToolbar-dense {
             min-height: 48px;
         }
     }
+
 </style>
 <body>
-    <div id="my-mirador"/> 
+    <div id="viewer"/> 
     <script type="text/javascript">
-        var mirador = Mirador.viewer({
-            "id": "my-mirador",
-            "manifests": {
-                "https://content.staatsbibliothek-berlin.de/dc/1041121385/manifest": {
-                }
-            },
+        const params = Object.fromEntries( (new URL(document.location.href)).searchParams.entries())
+        const showWorkspaceControl = false
+        const { 
+            allowFullscreen=false,
+            allowTopMenuButton=false,
+            language="de",
+            manifest,
+            page=1,
+            sideBarPanel=null,
+            sideBarOpen=false,
+            showPageInfo=true,
+            showPagination=true,
+            showZoomControls=true,
+            // showWorkspaceControl=true, // We disable Workspace viewer here
+            view='single',
+        } = params
 
+
+        /*
+         *  This parses pagination and pageinfo settings:
+         */
+        if ( [showPageInfo, showPagination].some((v) => v === 'false') ) {
+            classesToChange = []
+            if ( showPageInfo === 'false' ) classesToChange.push('.mirador-osd-info')
+            if ( showPagination === 'false' ) classesToChange.push('.mirador-osd-navigation')
+            // Currently this is the class for the divider: .mirador73
+            // It will need to be updated when we update mirador
+            if ( [showPageInfo, showPagination].every((v) => v === 'false' )) classesToChange.push('.mirador73')
+            classesToChange = classesToChange.join(', ')
+            const paginationStyle = document.createElement('style', )
+            paginationStyle.innerHTML = `${classesToChange} { display: none !important; }`
+            document.head.appendChild(paginationStyle)
+        }
+
+        const config = {
+            "id": "viewer",
             "window": {
-                allowFullscreen: false,
+                defaultView: view, // apparently we need the line beneath or if not book will be the default view allways
+                views: [ { key: 'single' }, { key: 'gallery' }, { key: 'book'}],
+                allowFullscreen: allowFullscreen === 'true',
                 allowClose: false,
                 allowMaximize: false,
-                allowWindowSideBar: false,
-                allowTopMenuButton: false,
-                sideBarOpen: true,
-                sideBarPanel: 'canvas',
-                panels:{canvas:true, attribution: false, info:false}
+                sideBarPanel: sideBarPanel || 'info',
+                allowWindowSideBar: [ 'info', 'attribution', 'canvas', 'annotations', 'search'].includes(sideBarPanel),
+                sideBarOpen: sideBarOpen === 'true',
+                allowTopMenuButton: allowTopMenuButton === 'true'
             },
-            "windows": [
-                {
-                "loadedManifest": "https://content.staatsbibliothek-berlin.de/dc/1041121385/manifest",
-                "canvasIndex": 4,
-                "maximized": true,
-                }
-            ],
-            "workspace": {showZoomControls: true},
-            "osdConfig": {
+            workspace: {
+                showZoomControls: showZoomControls !== "false",
+                draggingEnabled: true
+            },
+            osdConfig: {
                 constrainDuringPan: true,
                 visibilityRatio: 0.8
-            }
-        });
+            },
+            language
+        }
+        if (manifest) {
+          config.manifests = [manifest]
+          config.windows = [{
+                loadedManifest: manifest,
+                canvasIndex: Math.max(page - 1, 0),
+                maximized: true,
+            }]
+        }
+
+        var mirador = Mirador.viewer(config)
     </script>
 </body>
 </html>
