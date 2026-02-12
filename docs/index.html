@@ -8,22 +8,22 @@
 </head>
 <body>
     <div class="container-sm">
-        <h1>Build your own Mirador Instance</h1>
+        <h1 class="mt-5 mb-5">Build your own Mirador Instance</h1>
         <p>
             This is a showcase of how to play around building your own
             mirador instance. Wanna see how? Have a look in the
             <a target="_blank" href="https://github.com/Marcel-Tronco/mirador-playground">repo</a>.
         </p>
         <ol>
-            <li>
+            <li class="mt-2">
                 A <strong>basic viewer</strong> couldn't be simpler just a few lines of html served
                 from a web server and this is it. Have a look at the
                 <a target="_blank" href="https://github.com/Marcel-Tronco/mirador-playground/blob/main/docs/basic_viewer/index.html" >
                     html
                 </a>.
-                Wanna see how looks ? <a href="basic_viewer/index.html">There</a> you go.
+                Wanna see how looks? <a href="basic_viewer/index.html">There</a> you go.
             </li>
-            <li>
+            <li class="mt-2">
                 Mirador viewers can be configured easily with a wide range of
                 options ( see the
                 <a target="_blank" href="https://github.com/ProjectMirador/mirador/wiki/Configuration-Recipes">
@@ -36,11 +36,11 @@
                 with just some query params set differently.
 
                 <ul>
-                    <li>
+                    <li class="mt-2">
                         Like a <strong>minimal viewer</strong> for situations
                         like an exhibition showing a work on a tablet device
                         where the user should stick to a manifest and only
-                        leaf some pages and zoom in on.
+                        leaf some pages and zoom in and out.
                         <br>
                         In this case we only need to add to query params like
                         that:
@@ -54,7 +54,7 @@
                         </a>
                         is how it turns out.
                     </li>
-                    <li>
+                    <li class="mt-2">
                         You can modify <strong>a lot more</strong> than that.
                         If you have two images that should be shown like an
                         opened book you can select a the <strong>view</strong>.
@@ -73,12 +73,74 @@
                         </a>.
                     </li>
                 </ul>
+                <p class="mt-2">
+                    These are the options I implemented here:
+                    <ul class="d-flex flex-wrap gap-5">
+                        <li class="w-25 mt-2">
+                            <strong>manifest</strong>: this sets the loaded manifest as an URL.
+                        </li>
+                        <li class="w-25 mt-2">
+                            <strong>page</strong>: (default: 1) the number of the page to be opened
+                            at first
+                        </li>
+                        <li class="w-25 mt-2">
+                            <strong> view </strong>: (default: single) select whether to show an single image (single),
+                            two next to each other (book) or a grid of small thumbnails (gallery)
+                        </li>
+                        <li class="w-25 mt-2">
+                            <strong>language</strong>: (default: en) select the language of the UI at startup.
+                            ( e.g. en, de)
+                        </li>
+                        <li class="w-25 mt-2">
+                            <strong>allowFullscreen</strong>: (default: false ) set whether a button should be shown to switch to
+                            fullscreen mode
+                            if needed <code>allowFullscreen=false</code>
+                        </li>
+                        <li class="w-25 mt-2">
+                            <strong>allowTopMenuButton</strong> (default true): decide wheter to
+                            show a button to switch the view and plugins
+                            if needed <code>allowTopMenuButton=false</code>
+                        </li>
+                        <li class="w-25 mt-2">
+                            <strong>sideBarPanel</strong>: decide whether a side bar
+                            panel is available at all. Standard options:  info,
+                            attribution, canvas, annotations. 
+                            <strong>turned off</strong> by default
+                            if needed <code>sideBarPanel=info</code>
+                        </li>
+                        <li class="w-25 mt-2">
+                            <strong>sideBarOpen</strong> : set whether the side bar panel should be
+                            opened on startup. (Only effective when a sideBarPanel
+                            option is set)
+                            <strong>turned off</strong>  by default
+                            if needed <code>sideBarOpen=true</code>
+                        </li>
+                        <li class="w-25 mt-2">
+                            <strong>showZoomControls</strong>: sets whether buttons for zooming
+                            should be displayed.
+                            <strong>turned on</strong> by default
+                            if needed <code>showZoomControls=false</code>
+                        </li>
+                        <li class="w-25 mt-2">
+                            <strong>showPagination</strong>: sets whether buttons for leafing
+                            should be displayed.
+                            <strong>turned on</strong> by default
+                            if needed <code>showPagination=false</code>
+                        </li>
+                        <li class="w-25 mt-2">
+                            <strong>showPageInfo</strong>: sets whether the page info on the
+                            buttom should be shown (page number and label)
+                            <strong>turned on</strong> by default
+                            if needed <code>showPageInfo=false</code>
+                        </li>
+                    </ul>
+                </p>
             </li>
-            <li>
+            <li class="mt-2">
                 <a href="basic_pipeline/index.html">A gh actions built viewer</a> with some plugins (text overlay, image tools, downloads).
             </li>
-            <li>
-                <div> 
+            <li class="mt-2">
+                <div class="mb-2"> 
                     An viewer embedded via iframe
                 </div>
                 <iframe 
@@ -93,6 +155,7 @@
                 
             </li>
         </ol>
+
     </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
